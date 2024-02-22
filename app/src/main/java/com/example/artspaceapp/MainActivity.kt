@@ -3,18 +3,13 @@ package com.example.artspaceapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,17 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.artspaceapp.ui.theme.ArtSpaceAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,117 +42,137 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ArtImageWithTitle(
-    imageResource: Int,
-    textResource: String,
-    titleResource: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            painter = painterResource(id = imageResource),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(20.dp)
-                .border(border = BorderStroke(2.dp, Color.Gray), shape = RectangleShape)
-                .height(350.dp)
-                .width(300.dp)
-                .shadow(elevation = 4.dp, shape = RectangleShape)
-                .padding(20.dp)
+fun ArtSpaceApp() {
+
+    var artImage by remember { mutableStateOf(1) }
+    var title by remember { mutableStateOf(1) }
+    var authorAndYear by remember { mutableStateOf(1) }
+
+    val imageResource = when(artImage) {
+        1 -> R.drawable.bourgeois
+        2 -> R.drawable.hockney
+        3 -> R.drawable.koons
+        4 -> R.drawable.imagechristina
+        5 -> R.drawable.lovers
+        6 -> R.drawable.memorysalvordali
+        else -> R.drawable.bourgeois
+    }
+
+    val titleString = when(title) {
+        1 -> R.string.TBourgeois
+        2 -> R.string.THockney
+        3 -> R.string.TKoons
+        4 -> R.string.TWyeth
+        5 -> R.string.TMagritte
+        6 -> R.string.TDalí
+        else -> R.string.TBourgeois
+    }
+
+    val authorAndYearString = when(authorAndYear) {
+        1 -> R.string.LouiseBourgeois
+        2 -> R.string.DavidHockney
+        3 -> R.string.JeffKoons
+        4 -> R.string.AndrewWyeth
+        5 -> R.string.RenéMagritte
+        6 -> R.string.SalvadorDalí
+        else -> R.string.LouiseBourgeois
+    }
+
+    Column {
+        ArtworkImage(
+            imageResource = imageResource,
+            contentDescription = titleString
         )
-        Card(
-            modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 100.dp)
-                .shadow(elevation = 6.dp)
+        ArtworkDescription(
+            titleString = titleString,
+            authorAndYearString = authorAndYearString
+        )
+        ArtworkButton(
+            artImage = artImage,
+            title = title,
+            authorAndYear = authorAndYear,
+            previousImage = {
+                artImage -= 1
+                title -= 1
+                authorAndYear -= 1
+            },
+            nextImage = {
+                artImage += 1
+                title += 1
+                authorAndYear += 1
+            },
+            firstImage = {
+                artImage = 1
+                title = 1
+                authorAndYear = 1
+            }
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                ) {
-                    Text(
-                        text = titleResource,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = textResource,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(
-                0.dp,
-                alignment = Alignment.CenterHorizontally
-            ),
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .padding(bottom = 30.dp)
-        ) {
-            Button(
-                onClick = {  },
-                modifier = Modifier
-                    .padding(start = 50.dp, end = 50.dp)
-            ) {
-                Text(
-                    text = "Previous"
-                )
-            }
-            Button(
-                onClick = {  },
-                modifier = Modifier
-                    .padding(start = 50.dp, end = 50.dp)
-            ) {
-                Text(
-                    text = "Next"
-                )
-            }
+            artImage = 6
+            title = 6
+            authorAndYear = 6
         }
     }
 }
 
 @Composable
-fun ArtSpaceApp() {
-    var result by remember { mutableStateOf(0) }
+fun ArtworkImage(
+    @DrawableRes imageResource: Int,
+    @StringRes contentDescription: Int
+) {
+    Image(
+        painter = painterResource(imageResource),
+        contentDescription = stringResource(contentDescription)
+    )
+}
 
-    when(result) {
-        1 -> ArtImageWithTitle(
-            imageResource = R.drawable.bourgeois,
-            textResource = stringResource(id = R.string.LouiseBourgeois),
-            titleResource = stringResource(id = R.string.TBourgeois)
-        )
-        2-> ArtImageWithTitle(
-            imageResource = R.drawable.hockney,
-            textResource = stringResource(id = R.string.DavidHockney),
-            titleResource = stringResource(id = R.string.THockney)
-        )
-        3 -> ArtImageWithTitle(
-            imageResource = R.drawable.koons,
-            textResource = stringResource(id = R.string.JeffKoons),
-            titleResource = stringResource(id = R.string.TKoons)
-        )
-        4 -> ArtImageWithTitle(
-            imageResource = R.drawable.imagechristina,
-            textResource = stringResource(id = R.string.AndrewWyeth),
-            titleResource = stringResource(id = R.string.TWyeth)
-        )
-        5 -> ArtImageWithTitle(
-            imageResource = R.drawable.lovers,
-            textResource = stringResource(id = R.string.RenéMagritte),
-            titleResource = stringResource(id = R.string.TMagritte)
-        )
-        else -> ArtImageWithTitle(
-            imageResource = R.drawable.memorysalvordali,
-            textResource = stringResource(id = R.string.SalvadorDalí),
-            titleResource = stringResource(id = R.string.TDalí)
-        )
+@Composable
+fun ArtworkDescription(
+    @StringRes titleString: Int,
+    @StringRes authorAndYearString: Int
+) {
+    Column {
+        Text(text = stringResource(titleString))
+        Text(text = stringResource(authorAndYearString))
     }
 }
 
-@Preview(showBackground = true)
+@Composable
+fun ArtworkButton(
+    artImage: Int,
+    title: Int,
+    authorAndYear: Int,
+    previousImage: (Int) -> Unit,
+    nextImage: (Int) -> Unit,
+    firstImage: (Int) -> Unit,
+    lastImage: (Int) -> Unit
+) {
+    Row {
+        Button(
+            onClick = {
+            if (artImage != 1 && title != 1 && authorAndYear != 1) {
+                previousImage(artImage)
+            } else if ((artImage == 1 && title == 1 && authorAndYear == 1)) {
+                lastImage(artImage)
+            }
+        }
+        ) {
+            Text(text = "Previous")
+        }
+        Button(
+            onClick = {
+                if (artImage != 6 && title != 6 && authorAndYear != 6) {
+                    nextImage(artImage)
+                } else if ((artImage == 6 && title == 6 && authorAndYear == 6)) {
+                    firstImage(artImage)
+                }
+            }
+        ) {
+            Text(text = "Next")
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
     ArtSpaceAppTheme {
