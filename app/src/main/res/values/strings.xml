@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Art Space App</string>
     <string name="TBourgeois">Maman</string>
-    <string name="THockney">Portrait of an Artist (Pool with Two Figures)</string>
+    <string name="THockney">Portrait of an Artist</string>
     <string name="TKoons">Balloon Dogs</string>
     <string name="TDalí">The Persistence of Memory</string>
     <string name="TMagritte">The Lovers</string>
